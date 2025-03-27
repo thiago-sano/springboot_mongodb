@@ -6,6 +6,7 @@ import br.com.educandoweb.springbootmongodb.services.exception.ObjectNotFoundExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +22,16 @@ public class PostService {
     }
 
     public List<Post> findByTitle(String text) {
-
         // Consulta simples com Query Methods
         // return repo.findByTitleContainingIgnoreCase(text);
 
         // Consulta simples com @Query
         return repo.searchTitle(text);
+    }
 
+    public List<Post> fullSearch(String text, Date minDate, Date maxDate) {
+        // Por padrão, a comparação seria feita baseado em 00:00 do dia informado. Para contornar, foi adicionado 24h.
+        maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000);
+        return repo.fullSearch(text, minDate, maxDate);
     }
 }
